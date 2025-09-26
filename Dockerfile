@@ -17,6 +17,8 @@
 
 FROM python:3.10
 
+# ARG GUARDRAILS_TOKEN
+
 # Install git and gcc/g++ for annoy
 RUN apt-get update && apt-get install -y git gcc g++
 
@@ -54,6 +56,11 @@ RUN python -c "from fastembed.embedding import FlagEmbedding; FlagEmbedding('sen
 RUN nemoguardrails --help
 # Ensure the entry point is installed as a script
 RUN poetry install --all-extras --no-interaction --no-ansi
+
+# RUN guardrails configure --disable-metrics --disable-remote-inferencing --token $GUARDRAILS_TOKEN
+
+# RUN guardrails hub install hub://guardrails/detect_jailbreak
+# RUN guardrails hub install hub://guardrails/guardrails_pii
 
 ENTRYPOINT ["poetry", "run", "nemoguardrails"]
 CMD ["server", "--verbose", "--config=/config"]
